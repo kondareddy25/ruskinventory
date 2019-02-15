@@ -1,0 +1,202 @@
+<mat-toolbar color="primary">    
+    <!-- <div class="container"> -->
+    <!-- <div class="row">
+            <p class="text-center">Inventory App</p>
+            <p class="text-right"> k.yallavula@gmail.com</p>
+        </div> -->
+    <!-- </div> -->
+    <span>Bismi Traders</span>
+
+    <!-- This fills the remaining space of the current row -->
+    <span class="fill-space"></span>
+  
+    <!-- <span>Right Aligned Text</span> -->
+  </mat-toolbar>
+  <div class="basic-container">
+      
+  </div>
+  
+<mat-tab-group [color]="white" [backgroundColor]="blue">
+    <mat-tab label="Current Stock" backgroundColor="blue"> 
+        <div class="col-md-4" style="margin-left: 30%;border-radius: 10px;border:solid 1px;margin-top: 20px">
+        <div class="row col-sm-15">
+            <div>
+              <p class="text-center" style="font-size: x-large;">Current Stock <span [innerHTML]="totalRusk"></span> KG</p>
+              <!-- <p class="text-right" style="font-size: x-large;">{{totalRusk}} KG</p> -->
+              <form [formGroup]="angForm" (ngSubmit)="onSubmit(angForm)">
+                    <div class="form-group form-group-sm col-sm-12">
+                            <div class="row">
+                                <label for="formGroupArrivalDate" class="col-sm-5 col-form-label">Arrival Date</label>
+                                <div class="col-sm-7">
+                                        <input type="date" formControlName="formGroupArrivalDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupArrivalDate.errors }" />
+                                        <div *ngIf="submitted && f.formGroupArrivalDate.errors" class="invalid-feedback">
+                                            <div *ngIf="f.formGroupArrivalDate.errors.required">Arrival Date is required</div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>                 
+                  <div class="form-group form-group-sm col-sm-12">
+                        <div class="row">
+                            <label for="formGroupTypeOfBox" class="col-sm-5 col-form-label">Type of Box</label>
+                            <div class="col-sm-7">
+                                    <mat-form-field style="width: 98%;">
+                                            <mat-select formControlName="formGroupTypeOfBox" required (selectionChange)="calculateTotalKG()" >
+                                              <mat-option *ngFor="let animal of animals" [value]="animal.boxQuantity">
+                                                {{animal.boxQuantity}}
+                                              </mat-option>
+                                            </mat-select>
+                                            <!-- <mat-error *ngIf="f.formGroupTypeOfBox.errors.required">Please choose an animal</mat-error> -->
+                                            <div *ngIf="submitted && f.formGroupTypeOfBox.errors" class="invalid-feedback">
+                                                <div *ngIf="f.formGroupTypeOfBox.errors.required">Type of Box is required</div>
+                                            </div>
+                                    </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                 
+                  <div class="form-group form-group-sm col-sm-12">
+                        <div class="row">
+                            <label for="formGroupNoOfBoxes" class="col-sm-5 col-form-label">No of Boxes</label>
+                            <div class="col-sm-7">
+                                    <input type="text" formControlName="formGroupNoOfBoxes" (blur)="calculateTotalKG()" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupNoOfBoxes.errors }" />
+                                    <div *ngIf="submitted && f.formGroupNoOfBoxes.errors" class="invalid-feedback">
+                                        <div *ngIf="f.formGroupNoOfBoxes.errors.required">No of Boxes is required</div>                                        
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+                  <div class="form-group form-group-sm col-sm-12">
+                        <div class="row">
+                            <label for="formGroupTotalInKG" class="col-sm-5 col-form-label">Total Weight(KG)</label>
+                            <div class="col-sm-7">
+                                    <input type="text" readonly formControlName="formGroupTotalInKG" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupTotalInKG.errors }" />
+                                    <!-- <div *ngIf="submitted && f.formGroupTotalInKG.errors" class="invalid-feedback">
+                                        <div *ngIf="f.formGroupTotalInKG.errors.required">Total Weight(KG) is required</div>
+                                    </div> -->
+                            </div>
+                        </div>
+                    </div>  
+                    <!-- <div class="form-group form-group-sm col-sm-12">
+                            <div class="row">
+                                <label for="formGroupTotalInKG" class="col-sm-5 col-form-label">Total Current Stock Weight(KG)</label>
+                                <div class="col-sm-7">
+                                        <input type="text"  [(ngModel)] = "totalRusk" readonly class="form-control"/>
+                                        <div *ngIf="submitted && f.formGroupTotalInKG.errors" class="invalid-feedback">
+                                            <div *ngIf="f.formGroupTotalInKG.errors.required">Total Weight(KG) is required</div>
+                                        </div> 
+                                </div>
+                            </div>
+                        </div>                -->
+                  <div class="form-group text-right col-sm-12">
+                      <button [disabled]="loading" class="btn btn-primary">Save</button>
+                  </div>
+              </form>
+          </div>
+        </div>
+        </div> 
+        <div>
+                <!-- <hello name="{{ name }}"></hello> -->
+                <!-- <mat-divider></mat-divider> -->
+                <mat-list>
+                    <mat-list-item>
+                            <mat-divider></mat-divider> 
+                    </mat-list-item>
+                </mat-list>
+                <!-- <mat-devider></mat-devider> -->
+                <div class="example-container mat-elevation-z8">
+                  <mat-table #table [dataSource]="dataSource">
+                
+                    <!--- Note that these columns can be defined in any order.
+                          The actual rendered columns are set as a property on the row definition" -->
+                
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="id">
+                      <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                    </ng-container>
+                
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="arrivalDate">
+                      <mat-header-cell *matHeaderCellDef> Arrival Date </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.arrivalDate}} </mat-cell>
+                    </ng-container>
+                
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="typeOfBox">
+                      <mat-header-cell *matHeaderCellDef> Type of Box </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.typeOfBox}} </mat-cell>
+                    </ng-container>
+                
+                    <!-- Symbol Column -->
+                    <ng-container matColumnDef="noofBoxes">
+                      <mat-header-cell *matHeaderCellDef> No of Boxes </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.noofBoxes}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalweight">
+                            <mat-header-cell *matHeaderCellDef> Total Weight(KG) </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.totalweight}} </mat-cell>
+                          </ng-container>
+
+                    
+                
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                </div>
+</div>
+    </mat-tab>
+    <mat-tab label="Sales">            
+        <app-master></app-master>
+    </mat-tab>
+    <mat-tab label="Master Screen"> 
+        <app-supplierdetails></app-supplierdetails>           
+    </mat-tab>
+  </mat-tab-group>
+  
+
+
+<!-- <div class="container" style="padding:20px;border-radius: 10px;border:solid 1px;margin-top: 20px;max-width: 800px;    background: silver;">
+    
+<div class="row">
+  <div class="col-md-4 offset-md-3">
+      <p class="text-center" style="font-size: x-large;">Current Stock</p>
+      <form [formGroup]="angForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+              <label>Arrival Date</label>
+              <input type="date" formControlName="formGroupArrivalDate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupArrivalDate.errors }" />
+              <div *ngIf="submitted && f.formGroupArrivalDate.errors" class="invalid-feedback">
+                  <div *ngIf="f.formGroupArrivalDate.errors.required">Arrival Date is required</div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label>Type of Box</label>
+              <input type="text" formControlName="formGroupTypeOfBox" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupTypeOfBox.errors }" />
+              <div *ngIf="submitted && f.formGroupTypeOfBox.errors" class="invalid-feedback">
+                  <div *ngIf="f.formGroupTypeOfBox.errors.required">Type of Box is required</div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label>No of Boxes</label>
+              <input type="text" formControlName="formGroupNoOfBoxes" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupNoOfBoxes.errors }" />
+              <div *ngIf="submitted && f.formGroupNoOfBoxes.errors" class="invalid-feedback">
+                  <div *ngIf="f.formGroupNoOfBoxes.errors.required">No of Boxes is required</div>
+                 
+              </div>
+          </div>
+          <div class="form-group">
+              <label>Total Weight(KG)</label>
+              <input type="text" formControlName="formGroupTotalInKG" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.formGroupTotalInKG.errors }" />
+              <div *ngIf="submitted && f.formGroupTotalInKG.errors" class="invalid-feedback">
+                  <div *ngIf="f.formGroupTotalInKG.errors.required">Total Weight(KG) is required</div>
+                  
+              </div>
+          </div>
+          <div class="form-group text-right">
+              <button [disabled]="loading" class="btn btn-primary">Save</button>
+          </div>
+      </form>
+  </div>
+</div>
+</div> -->
